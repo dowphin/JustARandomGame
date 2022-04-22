@@ -3,6 +3,7 @@ package com.mygdx.game.screens;
 import java.util.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -71,6 +72,8 @@ public class LevelThree implements Screen{
 	public static Texture grid_1;
 	public static Texture grid_2;
 	public static Texture grid_3;
+	private static String konami = "";
+	private static String code = "uuddlrlrbae";
 
 	public LevelThree(PuzzleGame game) {
 
@@ -113,7 +116,33 @@ public class LevelThree implements Screen{
 	@Override
 	public void render(float delta) {
 		game.font.getData().setScale(2, 2);
-		
+		if (Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+			konami += "u";
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+			konami += "d";
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+			konami += "l";
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+			konami += "r";
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
+			konami += "b";
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
+			konami += "a";
+		}
+		if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+			konami += "e";
+		}
+		if (konami.equals(code)){
+			game.LevelThreeBeaten = true;
+		}
+		if (!code.contains(konami)){
+			konami = "";
+		}
 		ScreenUtils.clear((float) 0.149019608, (float) 0.831372549, (float) 0.760784314, 1);		
 		game.batch.begin();
 		game.batch.draw(title, MainMenuScreen.TITLE_X, MainMenuScreen.TITLE_Y, MainMenuScreen.TITLE_WIDTH, MainMenuScreen.TITLE_HEIGHT);
@@ -139,7 +168,7 @@ public class LevelThree implements Screen{
 
 		game.font.setColor(Color.BLACK);
 		game.layout.setText(game.font, the_hint, game.font.getColor(), targetWidth, Align.center, false);
-		game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 535, targetWidth, Align.center, false);
+		game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 530, targetWidth, Align.center, false);
 
 
 
@@ -248,6 +277,31 @@ public class LevelThree implements Screen{
 		if (game.LevelNineBeaten) {
 			game.batch.draw(grid_b, 0, 480, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
 			game.batch.draw(grid_3, 900, 0, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
+		}
+		if (
+				Gdx.input.getX() < LevelOne.X_X + LevelOne.X_SIDE &&
+						Gdx.input.getX() > LevelOne.X_X &&
+						PuzzleGame.HEIGHT - Gdx.input.getY() < LevelOne.X_Y + LevelOne.X_SIDE &&
+						PuzzleGame.HEIGHT - Gdx.input.getY() > LevelOne.X_Y
+		){
+			game.batch.draw(LevelOne.x_button_active, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
+			if (Gdx.input.justTouched()){
+				game.setScreen(new MainMenuScreen(game));
+				game.LevelOneBeaten = false;
+				game.LevelTwoBeaten = false;
+				game.LevelThreeBeaten = false;
+				game.LevelFourBeaten = false;
+				game.LevelFiveBeaten = false;
+				game.LevelSixBeaten = false;
+				game.LevelSevenBeaten = false;
+				game.LevelEightBeaten = false;
+				game.LevelNineBeaten = false;
+				game.showYTLink = false;
+				game.showLvL8Buttons = false;
+			}
+
+		} else{
+			game.batch.draw(LevelOne.x_button_inactive, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
 		}
 		game.batch.end();
 		

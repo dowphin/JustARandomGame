@@ -1,6 +1,7 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -71,8 +72,6 @@ public class LevelTen implements Screen {
     // Declares every texture used
 
     public static Texture title;
-    public static Texture cog_inactive;
-    public static Texture cog_active;
     public static Texture center;
     public static Texture door;
     public static Texture back_inactive;
@@ -120,6 +119,8 @@ public class LevelTen implements Screen {
     ArrayList<Texture> colors = new ArrayList<Texture>();
 
     public static String combination = "";
+    private static String konami = "";
+    private static String code = "uuddlrlrbae";
 
     public LevelTen (PuzzleGame game){
         this.game = game;
@@ -146,9 +147,9 @@ public class LevelTen implements Screen {
         square_green = new Texture("level_center_green.png");
         square_blue = new Texture("level_center_blue.png");
         square_purple = new Texture("level_center_purple.png");
-        hints.add("A");
-        hints.add("M");
-        hints.add("OGUS");
+        hints.add("Coordinates.");
+        hints.add("The previous levels have changed.");
+        hints.add("What do the colors remind you of?");
 
         colors.add(square_white);
         colors.add(square_red);
@@ -160,6 +161,33 @@ public class LevelTen implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            konami += "u";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+            konami += "d";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            konami += "l";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            konami += "r";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
+            konami += "b";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            konami += "a";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            konami += "e";
+        }
+        if (konami.equals(code)){
+            game.setScreen(new WinScreen(game));
+        }
+        if (!code.contains(konami)){
+            konami = "";
+        }
 
         ScreenUtils.clear((float) 0.149019608, (float) 0.831372549, (float) 0.760784314, 1);
         game.batch.begin();
@@ -208,7 +236,7 @@ public class LevelTen implements Screen {
         }
         game.font.setColor(Color.BLACK);
         game.layout.setText(game.font, the_hint, game.font.getColor(), targetWidth, Align.center, false);
-        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 535, targetWidth, Align.center, false);
+        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 530, targetWidth, Align.center, false);
 
         game.batch.draw(colors.get(box1), SQUARE_X - 100, SQUARE_Y + 100, (float) SQUARE_SIDE, (float) SQUARE_SIDE);
         if (
@@ -348,7 +376,7 @@ public class LevelTen implements Screen {
 
         combination = Integer.toString(box1) + Integer.toString(box2) + Integer.toString(box3) + Integer.toString(box4) + Integer.toString(box5) + Integer.toString(box6) + Integer.toString(box7) + Integer.toString(box8) + Integer.toString(box9);
         if (combination.equals("155234143")){
-            Gdx.app.exit();
+            game.setScreen(new WinScreen(game));
         }
         game.batch.draw(grid_1, GRID_X - 100, GRID_Y + 150, GRID_SIDE, GRID_SIDE);
         game.batch.draw(grid_2, GRID_X, GRID_Y + 150, GRID_SIDE, GRID_SIDE);
@@ -357,7 +385,31 @@ public class LevelTen implements Screen {
         game.batch.draw(grid_b, GRID_X - 150, GRID_Y, GRID_SIDE, GRID_SIDE);
         game.batch.draw(grid_c, GRID_X - 150, GRID_Y - 100, GRID_SIDE, GRID_SIDE);
 
+        if (
+                Gdx.input.getX() < LevelOne.X_X + LevelOne.X_SIDE &&
+                        Gdx.input.getX() > LevelOne.X_X &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() < LevelOne.X_Y + LevelOne.X_SIDE &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() > LevelOne.X_Y
+        ){
+            game.batch.draw(LevelOne.x_button_active, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
+            if (Gdx.input.justTouched()){
+                game.setScreen(new MainMenuScreen(game));
+                game.LevelOneBeaten = false;
+                game.LevelTwoBeaten = false;
+                game.LevelThreeBeaten = false;
+                game.LevelFourBeaten = false;
+                game.LevelFiveBeaten = false;
+                game.LevelSixBeaten = false;
+                game.LevelSevenBeaten = false;
+                game.LevelEightBeaten = false;
+                game.LevelNineBeaten = false;
+                game.showYTLink = false;
+                game.showLvL8Buttons = false;
+            }
 
+        } else{
+            game.batch.draw(LevelOne.x_button_inactive, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
+        }
         game.batch.end();
 
     }

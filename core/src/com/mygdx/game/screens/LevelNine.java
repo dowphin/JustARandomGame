@@ -1,6 +1,7 @@
 package com.mygdx.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -76,8 +77,7 @@ public class LevelNine implements Screen {
     // Declares every texture used
 
     public static Texture title;
-    public static Texture cog_inactive;
-    public static Texture cog_active;
+
     public static Texture center;
     public static Texture door;
     public static Texture back_inactive;
@@ -92,6 +92,8 @@ public class LevelNine implements Screen {
 
     public static Texture hint_inactive;
     public static Texture hint_active;
+    private static String konami = "";
+    private static String code = "uuddlrlrbae";
 
     public LevelNine (PuzzleGame game){
         this.game = game;
@@ -100,8 +102,7 @@ public class LevelNine implements Screen {
     @Override
     public void show() {
         title = new Texture ("level_nine.png");
-        cog_inactive = new Texture ("cog_inactive.png");
-        cog_active = new Texture ("cog_active.png");
+
         center = new Texture("level_center_red.png");
         door = new Texture("door.png");
         back_inactive = new Texture("back_button_inactive.png");
@@ -110,9 +111,9 @@ public class LevelNine implements Screen {
         forward_active = new Texture("forward_button_active.png");
         button_active = new Texture("button_active.png");
         button_inactive = new Texture("button_inactive.png");
-        hints.add("The answer isn't what it seems");
-        hints.add("Trust me, it's the last thing that'll happen");
-        hints.add("Win to lose, lose to win, win to win, lose to lose");
+        hints.add("Click on the third button");
+        hints.add("Sometimes, you have to take a leap of faith.");
+        hints.add("Trust me, and reset.");
         grid_1 = new Texture("grid_1.png");
         grid_2 = new Texture("grid_2.png");
         grid_3 = new Texture("grid_3.png");
@@ -123,6 +124,33 @@ public class LevelNine implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            konami += "u";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+            konami += "d";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            konami += "l";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            konami += "r";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
+            konami += "b";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            konami += "a";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            konami += "e";
+        }
+        if (konami.equals(code)){
+            game.LevelNineBeaten = true;
+        }
+        if (!code.contains(konami)){
+            konami = "";
+        }
         game.font.getData().setScale(2, 2);
 // variables for timer text
 
@@ -188,14 +216,13 @@ public class LevelNine implements Screen {
                     hint_getter += 1;
                 }
                 the_hint = hints.get(hint_getter);
-                game.LevelNineBeaten = true;
             }
         } else if (hint_getter < 2){
             game.batch.draw(LevelOne.hint_inactive, LevelOne.HINT_X, LevelOne.HINT_Y, LevelOne.HINT_SIDE, LevelOne.HINT_SIDE);
         }
         game.font.setColor(Color.BLACK);
         game.layout.setText(game.font, the_hint, game.font.getColor(), targetWidth, Align.center, false);
-        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 535, targetWidth, Align.center, false);
+        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 530, targetWidth, Align.center, false);
         if (
                 Gdx.input.getX() < LevelTwo.BUTTON_X + 100 + LevelTwo.BUTTON_SIDE &&
                         Gdx.input.getX() > LevelTwo.BUTTON_X + 100 &&
@@ -240,6 +267,20 @@ public class LevelNine implements Screen {
         if (game.LevelNineBeaten) {
             game.batch.draw(grid_a, 0, 480, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
             game.batch.draw(grid_1, 900, 0, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
+        }
+        if (
+                Gdx.input.getX() < LevelOne.X_X + LevelOne.X_SIDE &&
+                        Gdx.input.getX() > LevelOne.X_X &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() < LevelOne.X_Y + LevelOne.X_SIDE &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() > LevelOne.X_Y
+        ){
+            game.batch.draw(LevelOne.x_button_active, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
+            if (Gdx.input.justTouched()) {
+                game.LevelNineBeaten = true;
+                game.setScreen(new LevelTen(game));
+            }
+        } else{
+            game.batch.draw(LevelOne.x_button_inactive, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
         }
         game.batch.end();
 

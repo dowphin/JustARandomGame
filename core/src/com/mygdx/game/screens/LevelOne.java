@@ -2,6 +2,7 @@ package com.mygdx.game.screens;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,11 +22,7 @@ public class LevelOne implements Screen{
 
     // Texture Dimensions for every level
 
-    public static final double COG_DIVIDER = 4;
-    public static final int COG_WIDTH = (int) Math.round(142 / COG_DIVIDER);
-    public static final int COG_HEIGHT = (int) Math.round(139 / COG_DIVIDER);
-    public static final int COG_X = 1840;
-    public static final int COG_Y = 1000;
+
 
     public static final double CENTER_DIVIDER = 1.4;
     public static final int CENTER_SIDE = (int) Math.round(600 / CENTER_DIVIDER);
@@ -76,8 +73,7 @@ public class LevelOne implements Screen{
     // Declares every texture used
 
     public static Texture title;
-    public static Texture cog_inactive;
-    public static Texture cog_active;
+
     public static Texture center;
     public static Texture door;
     public static Texture back_inactive;
@@ -92,6 +88,8 @@ public class LevelOne implements Screen{
     public static Texture grid_2;
     public static Texture grid_3;
 
+    public static Texture x_button_inactive;
+    public static Texture x_button_active;
 //	Texture paused;
 
 
@@ -120,13 +118,20 @@ public class LevelOne implements Screen{
 
     private static Texture link;
 
+    public static double X_DIVIDER = 8;
+    public static int X_SIDE = (int) Math.round(466 / X_DIVIDER);
+    public static int X_X = 0;
+    public static int X_Y = 0;
+
+    private static String konami = "";
+    private static String code = "uuddlrlrbae";
+
     @Override
     public void show() {
 
 // Defines every texture used
         title = new Texture ("level_one.png");
-        cog_inactive = new Texture ("cog_inactive.png");
-        cog_active = new Texture ("cog_active.png");
+
         center = new Texture("level_center_yellow.png");
         door = new Texture("door.png");
         back_inactive = new Texture("back_button_inactive.png");
@@ -145,12 +150,42 @@ public class LevelOne implements Screen{
         grid_a = new Texture("grid_a.png");
         grid_b = new Texture("grid_b.png");
         grid_c = new Texture("grid_c.png");
+
+        x_button_active = new Texture("x_button_active.png");
+        x_button_inactive = new Texture("x_button_inactive.png");
     }
 
     @Override
     public void render(float delta) {
         game.font.getData().setScale(2, 2);
 
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            konami += "u";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+            konami += "d";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            konami += "l";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            konami += "r";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
+            konami += "b";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            konami += "a";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            konami += "e";
+        }
+        if (konami.equals(code)){
+            game.LevelOneBeaten = true;
+        }
+        if (!code.contains(konami)){
+            konami = "";
+        }
 
 // variables for timer text
 
@@ -215,7 +250,7 @@ public class LevelOne implements Screen{
         }
         game.font.setColor(Color.BLACK);
         game.layout.setText(game.font, the_hint, game.font.getColor(), targetWidth, Align.center, false);
-        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 535, targetWidth, Align.center, false);
+        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 530, targetWidth, Align.center, false);
 
 
         // drawing the font
@@ -229,6 +264,33 @@ public class LevelOne implements Screen{
             game.batch.draw(grid_b, 0, 480, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
             game.batch.draw(grid_1, 900, 0, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
         }
+
+        if (
+                Gdx.input.getX() < X_X + X_SIDE &&
+                        Gdx.input.getX() > X_X &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() < X_Y + X_SIDE &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() > X_Y
+        ){
+            game.batch.draw(x_button_active, X_X, X_Y, X_SIDE, X_SIDE);
+            if (Gdx.input.justTouched()){
+                game.setScreen(new MainMenuScreen(game));
+                game.LevelOneBeaten = false;
+                game.LevelTwoBeaten = false;
+                game.LevelThreeBeaten = false;
+                game.LevelFourBeaten = false;
+                game.LevelFiveBeaten = false;
+                game.LevelSixBeaten = false;
+                game.LevelSevenBeaten = false;
+                game.LevelEightBeaten = false;
+                game.LevelNineBeaten = false;
+                game.showYTLink = false;
+                game.showLvL8Buttons = false;
+            }
+
+        } else{
+            game.batch.draw(x_button_inactive, X_X, X_Y, X_SIDE, X_SIDE);
+        }
+
         game.batch.end();
 
 

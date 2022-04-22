@@ -21,8 +21,8 @@ public class PuzzleGame extends Game {
 	public boolean LevelFourBeaten = false;
 	public boolean LevelFiveBeaten = false;
 	public boolean LevelSixBeaten = false;
-	public boolean LevelSevenBeaten = true;
-	public boolean LevelEightBeaten = true;
+	public boolean LevelSevenBeaten = false;
+	public boolean LevelEightBeaten = false;
 	public boolean LevelNineBeaten = false;
 	public boolean showYTLink = false;
 	public boolean showLvL8Buttons = false;

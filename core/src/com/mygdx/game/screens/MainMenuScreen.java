@@ -20,7 +20,7 @@ public class MainMenuScreen implements Screen{
 	public static final int PLAY_BUTTON_WIDTH = (int) Math.round(PIC_WIDTH / PLAY_DIVIDER);
 	public static final int PLAY_BUTTON_HEIGHT = (int) Math.round(PIC_HEIGHT / PLAY_DIVIDER);
 	public static final float PLAY_BUTTON_X = PuzzleGame.WIDTH / 2 - PLAY_BUTTON_WIDTH / 2;
-	public static final float PLAY_BUTTON_Y = (PuzzleGame.HEIGHT / 2 - PLAY_BUTTON_HEIGHT / 2) - 8;
+	public static final float PLAY_BUTTON_Y = (PuzzleGame.HEIGHT / 2 - PLAY_BUTTON_HEIGHT / 2) - 120;
 	public static final double OPTION_DIVIDER = 6;
 	public static final int OPTION_BUTTON_WIDTH = (int) Math.round(PIC_WIDTH / OPTION_DIVIDER);
 	public static final int OPTION_BUTTON_HEIGHT = (int) Math.round(PIC_HEIGHT / OPTION_DIVIDER);
@@ -63,25 +63,6 @@ public class MainMenuScreen implements Screen{
 
 		ScreenUtils.clear((float) 0.149019608, (float) 0.831372549, (float) 0.760784314, 1);
 		game.batch.begin();
-		if (	
-				Gdx.input.getX() < EXIT_BUTTON_X + EXIT_BUTTON_WIDTH && 
-				Gdx.input.getX() > EXIT_BUTTON_X && 
-				PuzzleGame.HEIGHT - Gdx.input.getY() < EXIT_BUTTON_Y + EXIT_BUTTON_HEIGHT && 
-				PuzzleGame.HEIGHT - Gdx.input.getY() > EXIT_BUTTON_Y
-				
-				) {
-			
-			game.batch.draw(exit_button_active, EXIT_BUTTON_X, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
-			if (Gdx.input.justTouched()) {
-				Gdx.app.exit();
-			}
-			
-		} else {
-			
-			game.batch.draw(exit_button_inactive, EXIT_BUTTON_X, EXIT_BUTTON_Y, EXIT_BUTTON_WIDTH, EXIT_BUTTON_HEIGHT);
-			
-		}
-		
 		if (	
 				Gdx.input.getX() < PLAY_BUTTON_X + PLAY_BUTTON_WIDTH && 
 				Gdx.input.getX() > PLAY_BUTTON_X && 

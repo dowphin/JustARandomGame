@@ -101,8 +101,7 @@ public class LevelSeven implements Screen {
     // Declares every texture used
 
     public static Texture title;
-    public static Texture cog_inactive;
-    public static Texture cog_active;
+
     public static Texture center;
     public static Texture door;
     public static Texture back_inactive;
@@ -116,6 +115,8 @@ public class LevelSeven implements Screen {
     public static Texture hint_active;
 
     private static Texture link;
+    private static String konami = "";
+    private static String code = "uuddlrlrbae";
 
     public LevelSeven(PuzzleGame game){
         this.game = game;
@@ -124,8 +125,7 @@ public class LevelSeven implements Screen {
     @Override
     public void show() {
         title = new Texture ("level_seven.png");
-        cog_inactive = new Texture ("cog_inactive.png");
-        cog_active = new Texture ("cog_active.png");
+
         center = new Texture("level_center_green.png");
         door = new Texture("door.png");
         back_inactive = new Texture("back_button_inactive.png");
@@ -135,8 +135,8 @@ public class LevelSeven implements Screen {
         link = new Texture("link_8.png");
         letter_box = new Texture("letter_box.png");
         hints.add("Button");
-        hints.add("BUTTON");
-        hints.add("If you pressed it, good job! Now go check the previous levels");
+        hints.add("Check the previous levels for a difference.");
+        hints.add("You might have to open YouTube for this one.");
         grid_1 = new Texture("grid_1.png");
         grid_2 = new Texture("grid_2.png");
         grid_3 = new Texture("grid_3.png");
@@ -147,6 +147,34 @@ public class LevelSeven implements Screen {
 
     @Override
     public void render(float delta) {
+        if (Gdx.input.isKeyJustPressed(Input.Keys.UP)){
+            konami += "u";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.DOWN)){
+            konami += "d";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.LEFT)){
+            konami += "l";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.RIGHT)){
+            konami += "r";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.B)){
+            konami += "b";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.A)){
+            konami += "a";
+        }
+        if (Gdx.input.isKeyJustPressed(Input.Keys.ENTER)){
+            konami += "e";
+        }
+        if (konami.equals(code)){
+            game.LevelSevenBeaten = true;
+        }
+        if (!code.contains(konami)){
+            konami = "";
+        }
+
         game.font.getData().setScale(3, 3);
         ScreenUtils.clear((float) 0.149019608, (float) 0.831372549, (float) 0.760784314, 1);
         game.batch.begin();
@@ -217,7 +245,7 @@ public class LevelSeven implements Screen {
         game.font.getData().setScale(2, 2);
         game.font.setColor(Color.BLACK);
         game.layout.setText(game.font, the_hint, game.font.getColor(), targetWidth, Align.center, false);
-        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 535, targetWidth, Align.center, false);
+        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 530, targetWidth, Align.center, false);
 
         if (!game.showLvL8Buttons) {
             if (
@@ -375,30 +403,39 @@ public class LevelSeven implements Screen {
 
         }
 
-        if (
-                Gdx.input.getX() < LevelOne.HINT_X + LevelOne.HINT_SIDE &&
-                        Gdx.input.getX() > LevelOne.HINT_X &&
-                        PuzzleGame.HEIGHT - Gdx.input.getY() < LevelOne.HINT_Y + LevelOne.HINT_SIDE &&
-                        PuzzleGame.HEIGHT - Gdx.input.getY() > LevelOne.HINT_Y && hint_getter < 2
-        ) {
-            game.batch.draw(LevelOne.hint_active, LevelOne.HINT_X, LevelOne.HINT_Y, LevelOne.HINT_SIDE, LevelOne.HINT_SIDE);
-            if (Gdx.input.justTouched()){
-                if (hint_getter < 2){
-                    hint_getter += 1;
-                }
-                the_hint = hints.get(hint_getter);
-            }
-        } else if (hint_getter < 2){
-            game.batch.draw(LevelOne.hint_inactive, LevelOne.HINT_X, LevelOne.HINT_Y, LevelOne.HINT_SIDE, LevelOne.HINT_SIDE);
-        }
 
         game.font.getData().setScale(2, 2);
         game.font.setColor(Color.BLACK);
         game.layout.setText(game.font, the_hint, game.font.getColor(), targetWidth, Align.center, false);
-        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 535, targetWidth, Align.center, false);
+        game.font.draw(game.batch, the_hint, PuzzleGame.WIDTH / 2, 530, targetWidth, Align.center, false);
         if (game.LevelNineBeaten) {
             game.batch.draw(grid_b, 0, 480, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
             game.batch.draw(grid_2, 900, 0, LevelTen.GRID_SIDE, LevelTen.GRID_SIDE);
+        }
+        if (
+                Gdx.input.getX() < LevelOne.X_X + LevelOne.X_SIDE &&
+                        Gdx.input.getX() > LevelOne.X_X &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() < LevelOne.X_Y + LevelOne.X_SIDE &&
+                        PuzzleGame.HEIGHT - Gdx.input.getY() > LevelOne.X_Y
+        ){
+            game.batch.draw(LevelOne.x_button_active, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
+            if (Gdx.input.justTouched()){
+                game.setScreen(new MainMenuScreen(game));
+                game.LevelOneBeaten = false;
+                game.LevelTwoBeaten = false;
+                game.LevelThreeBeaten = false;
+                game.LevelFourBeaten = false;
+                game.LevelFiveBeaten = false;
+                game.LevelSixBeaten = false;
+                game.LevelSevenBeaten = false;
+                game.LevelEightBeaten = false;
+                game.LevelNineBeaten = false;
+                game.showYTLink = false;
+                game.showLvL8Buttons = false;
+            }
+
+        } else{
+            game.batch.draw(LevelOne.x_button_inactive, LevelOne.X_X, LevelOne.X_Y, LevelOne.X_SIDE, LevelOne.X_SIDE);
         }
         game.batch.end();
     }
